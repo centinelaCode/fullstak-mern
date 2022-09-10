@@ -1,6 +1,7 @@
 {
   "name": "apv",
   "version": "1.0.0",
+  "type": "module",
   "description": "proyecto fullstack js",
   "main": "index.js",
   "scripts": {
