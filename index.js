@@ -12,7 +12,7 @@ app.use('/', (req, res) => {
   res.send('Hola Mundo!!')
 })
 
-
-app.listen(4000, () => {
-  console.log('Server run on port 4000')
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server run on port ${PORT}`)
 })
