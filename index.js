@@ -9,7 +9,7 @@ import veterinarioRoutes from './routes/veterinarioRoutes.js';
 
 
 const app = express();
-
+app.use(express.json());
 conectarDB();
 
 app.use('/api/veterinarios', veterinarioRoutes); // all routes veterinarios
