@@ -18,8 +18,13 @@ const registro = async (req, res) => {
     res.json(vetrinarioGuardado)
   } catch (error) {
     console.log(error);
-  }
-    
+  }    
+}
+
+
+const confirmar = (req, res) => {
+  console.log(req.params.token)
+  res.json({msg: 'Confirmando cuenta...'})
 }
 
 const perfil = (req, res) => {
@@ -29,5 +34,6 @@ const perfil = (req, res) => {
 
 export {
   registro,
+  confirmar,
   perfil,
 }
