@@ -1,8 +1,16 @@
 import Veterinario from '../models/Veterinario.js'
 
 const registro = async (req, res) => {
-  // const {email, password, nombre} = req.body;
+  const { email } = req.body;
   try {
+    // prevenir usuarios duplicados (email)
+    const existeUsuario = await Veterinario.findOne({ email })
+    if(existeUsuario) {
+      const error = new Error('Usuario ya registrado');
+      return res.status(400).json({ msg: error.message })
+    }
+
+
     // Save new veterinario
     const veterinario = new Veterinario(req.body);
     const vetrinarioGuardado = await veterinario.save();
