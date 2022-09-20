@@ -1,5 +1,8 @@
 import Veterinario from '../models/Veterinario.js'
 
+/*
+* Method para registrar un usuario
+*/
 const registro = async (req, res) => {
   const { email } = req.body;
   try {
@@ -9,7 +12,6 @@ const registro = async (req, res) => {
       const error = new Error('Usuario ya registrado');
       return res.status(400).json({ msg: error.message })
     }
-
 
     // Save new veterinario
     const veterinario = new Veterinario(req.body);
@@ -21,7 +23,9 @@ const registro = async (req, res) => {
   }    
 }
 
-
+/*
+* Method para confirmar un usuario
+*/
 const confirmar = async(req, res) => {
   const { token } = req.params;
   const usuarioConfirmar = await Veterinario.findOne({token});
@@ -39,8 +43,27 @@ const confirmar = async(req, res) => {
   } catch (error) {
     console.log(error)
   }
-
 }
+
+/*
+* Method para autenticar un usuario
+*/
+const autenticar = (req, res) => {
+  /* 
+    pasos para autenticar un usuario
+    1.- verificar que el usuario exista(email debe estar registrado)
+    2.- Que su cuenta este confirmada
+    3.- verificar que el password sea correcto
+  */
+
+  console.log(req.body);
+
+  res.json({msg: 'Autenticando'})
+}
+
+
+
+
 
 const perfil = (req, res) => {
   res.json({ msg: 'Perfil del usuario' })
@@ -50,5 +73,6 @@ const perfil = (req, res) => {
 export {
   registro,
   confirmar,
+  autenticar,
   perfil,
 }
