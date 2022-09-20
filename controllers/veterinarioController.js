@@ -49,30 +49,37 @@ const confirmar = async(req, res) => {
 * Method para autenticar un usuario
 */
 const autenticar = async(req, res) => {
-  const { email } = req.body;
+  const { email, password } = req.body;
   /* 
-    pasos para autenticar un usuario
-    1.- verificar que el usuario exista(email debe estar registrado    
-    2.- Que su cuenta este confirmada
-    3.- verificar que el password sea correcto
+    ! Validaciones para poder autenticar
+    !1.- verificar que el usuario exista(email debe estar registrado    
+    !2.- Que su cuenta este confirmada
+    !3.- verificar que el password sea correcto
   */
 
-  // validacion 1
+  // validacion 1 (que este registrado el email)
   const usuario = await Veterinario.findOne({email});
   if (!usuario) {
     return res.status(403).json({msg: 'El usuario no existe'})
   }
 
-  // validación 2
+  // validación 2 (que este confirmada la cuenta)
   if(!usuario.confirmado) {
     const error = new Error('Tu cuenta no ha sido confirmada')
     return res.status(403).json({msg: error.message})
   }
 
-  // validacion 3
+  // validacion 3 (que el password sea correcto)
+  if(!await usuario.compararPassword(password)){
+    const error = new Error('Tus datos de acceso no son validos')
+    return res.status(403).json({msg: error.message})
+  }
+  
 
-
-  // authenticar el usuario
+    /* 
+    ! pasos para autenticar un usuario
+    !1.- Generar un JWT
+  */
   console.log(req.body);
   res.json({msg: 'Autenticando'})
 }
