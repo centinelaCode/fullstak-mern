@@ -6,10 +6,10 @@ const router =  express.Router();
 
 
 router.post('/registro', registro);
-router.get('/perfil', perfil);
 router.get('/confirmar/:token', confirmar);
 router.post('/login', autenticar)
 
 
+router.get('/perfil', perfil);
 
 export default router;

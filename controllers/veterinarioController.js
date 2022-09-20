@@ -1,4 +1,5 @@
 import Veterinario from '../models/Veterinario.js'
+import generarJWT from '../helpers/generarJWT.js';
 
 /*
 * Method para registrar un usuario
@@ -60,28 +61,28 @@ const autenticar = async(req, res) => {
   // validacion 1 (que este registrado el email)
   const usuario = await Veterinario.findOne({email});
   if (!usuario) {
-    return res.status(403).json({msg: 'El usuario no existe'})
+    return res.status(403).json({ msg: 'El usuario no existe' })
   }
 
   // validación 2 (que este confirmada la cuenta)
   if(!usuario.confirmado) {
     const error = new Error('Tu cuenta no ha sido confirmada')
-    return res.status(403).json({msg: error.message})
+    return res.status(403).json({ msg: error.message })
   }
 
   // validacion 3 (que el password sea correcto)
   if(!await usuario.compararPassword(password)){
     const error = new Error('Tus datos de acceso no son validos')
-    return res.status(403).json({msg: error.message})
+    return res.status(403).json({ msg: error.message })
   }
   
 
-    /* 
+  /* 
     ! pasos para autenticar un usuario
     !1.- Generar un JWT
-  */
-  console.log(req.body);
-  res.json({msg: 'Autenticando'})
+  */    
+  
+  res.json({ token: generarJWT(usuario.id) })
 }
 
 
