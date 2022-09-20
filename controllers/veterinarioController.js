@@ -48,16 +48,32 @@ const confirmar = async(req, res) => {
 /*
 * Method para autenticar un usuario
 */
-const autenticar = (req, res) => {
+const autenticar = async(req, res) => {
+  const { email } = req.body;
   /* 
     pasos para autenticar un usuario
-    1.- verificar que el usuario exista(email debe estar registrado)
+    1.- verificar que el usuario exista(email debe estar registrado    
     2.- Que su cuenta este confirmada
     3.- verificar que el password sea correcto
   */
 
-  console.log(req.body);
+  // validacion 1
+  const usuario = await Veterinario.findOne({email});
+  if (!usuario) {
+    return res.status(403).json({msg: 'El usuario no existe'})
+  }
 
+  // validación 2
+  if(!usuario.confirmado) {
+    const error = new Error('Tu cuenta no ha sido confirmada')
+    return res.status(403).json({msg: error.message})
+  }
+
+  // validacion 3
+
+
+  // authenticar el usuario
+  console.log(req.body);
   res.json({msg: 'Autenticando'})
 }
 
