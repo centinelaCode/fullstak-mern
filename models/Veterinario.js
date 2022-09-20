@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt'
+import generarId from '../helpers/generarId.js'
 
 const veterinarioShema =  mongoose.Schema(
   {
@@ -27,7 +29,8 @@ const veterinarioShema =  mongoose.Schema(
       default: null,
     },
     token: {
-      type: String
+      type: String,
+      default: generarId(),
     },
     confirmado: {
       type: Boolean,
@@ -39,6 +42,21 @@ const veterinarioShema =  mongoose.Schema(
     versionKey: false,
   }
 );
+
+veterinarioShema.pre('save', async function(next) {
+  // para no hashear un passwor hasheado
+  if(!this.isModified('password')) {
+    next();
+  }  
+
+  // hasheamos el password antes de guardarlo en la base de datos
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt)
+});
+
+veterinarioShema.methods.compararPassword = async function(passwordForm) {
+  return await bcrypt.compare(passwordForm, this.password)
+}
 
 const Veterinario = mongoose.model('veterinario', veterinarioShema);
 export default Veterinario;
