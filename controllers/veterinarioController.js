@@ -86,11 +86,15 @@ const autenticar = async(req, res) => {
 }
 
 
-
-
-
+/*
+* Method para el perfil
+*/
 const perfil = (req, res) => {
-  res.json({ msg: 'Perfil del usuario' })
+  // obtenemos el usuario que hizo auth desde la sesion que creamos req.veterinario
+  const {veterinario} = req;
+
+
+  res.json({ perfil: veterinario })
 }
 
 
