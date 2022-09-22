@@ -134,8 +134,26 @@ const comprobarToken = async(req, res) => {
 * Method para recuperar password - para guardar el nuvo password
 */
 const nuevoPassword = async(req, res) => {
- 
-  res.json({msg: 'En nuevo Password'})
+  const { token } = req.params;
+  const { password } = req.body;
+  
+  const veterinario = await Veterinario.findOne({ token })
+  if(!veterinario) {    
+    const error = new Error('Hubo un Error');
+    return res.status(400).json({msg: error.message})
+  } 
+
+  try {
+    
+    // eliminamos el tokenValido y guardamos el nuevo password
+    veterinario.token = null;
+    veterinario.password = password;
+    await veterinario.save();
+
+    res.json({msg: 'Password modificado correctamente'});
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 
