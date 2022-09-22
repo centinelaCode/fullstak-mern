@@ -1,5 +1,6 @@
 import Veterinario from '../models/Veterinario.js'
 import generarJWT from '../helpers/generarJWT.js';
+import generarId from '../helpers/generarId.js';
 
 /*
 * Method para registrar un usuario
@@ -76,13 +77,57 @@ const autenticar = async(req, res) => {
     return res.status(403).json({ msg: error.message })
   }
   
-
   /* 
     ! pasos para autenticar un usuario
     !1.- Generar un JWT
   */    
   
   res.json({ token: generarJWT(usuario.id) })
+}
+
+
+
+/*
+* Method para recuperar password - valida el email del usurio
+*/
+const olvidePassword = async(req, res) => {
+  const { email } = req.body;
+  
+  const  existeVetrinario = await Veterinario.findOne({email: email});
+  if(!existeVetrinario) {
+    const error = new Error('El usurio no existe');
+    return res.status(400).json({msg: error.message})
+  }
+
+  try {
+    existeVetrinario.token = generarId();
+    await existeVetrinario.save();
+    res.json({msg: 'Hemos enviado un email con las instrucciones'});
+  } catch (error) {
+    console.log(error)
+  }
+  
+}
+
+
+/*
+* Method para recuperar password - para leer y validar el token
+*/
+const comprobarToken = async(req, res) => {
+ 
+
+  res.json({msg: 'En Comprobar Token'})
+}
+
+
+
+/*
+* Method para recuperar password - para guardar el nuvo password
+*/
+const nuevoPassword = async(req, res) => {
+ 
+
+  res.json({msg: 'En nuevo Password'})
 }
 
 
@@ -102,5 +147,8 @@ export {
   registro,
   confirmar,
   autenticar,
+  olvidePassword,
+  comprobarToken,
+  nuevoPassword,
   perfil,
 }
