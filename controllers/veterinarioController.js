@@ -93,7 +93,7 @@ const autenticar = async(req, res) => {
 const olvidePassword = async(req, res) => {
   const { email } = req.body;
   
-  const  existeVetrinario = await Veterinario.findOne({email: email});
+  const  existeVetrinario = await Veterinario.findOne({ email: email });
   if(!existeVetrinario) {
     const error = new Error('El usurio no existe');
     return res.status(400).json({msg: error.message})
@@ -114,9 +114,18 @@ const olvidePassword = async(req, res) => {
 * Method para recuperar password - para leer y validar el token
 */
 const comprobarToken = async(req, res) => {
- 
+  const { token } = req.params;
+  
+  const tokenValido = await Veterinario.findOne({ token })
+  if(tokenValido) {
+    // El Token es valido y el usuario existe
 
-  res.json({msg: 'En Comprobar Token'})
+    res.json({msg: 'Token valido y el usuario existe'})
+  } else {
+    // El Token no es valido, el usuario no existe
+    const error = new Error('El token no válido');
+    return res.status(400).json({msg: error.message});
+  } 
 }
 
 
@@ -126,7 +135,6 @@ const comprobarToken = async(req, res) => {
 */
 const nuevoPassword = async(req, res) => {
  
-
   res.json({msg: 'En nuevo Password'})
 }
 
