@@ -90,7 +90,7 @@ const autenticar = async(req, res) => {
 * Method para el perfil
 */
 const perfil = (req, res) => {
-  res.json({ msg: 'Perfil del usuario' })
+  res.json({ msg: 'Mostrando Perfil' })
 }
 
 
