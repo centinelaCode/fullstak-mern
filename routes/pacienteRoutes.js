@@ -8,7 +8,7 @@ import {
 import checkAuth from '../middleware/authMiddleware.js';
 
 router.post('/', checkAuth, agregarPacientes)
-router.get('/', obtenerPacientes)
+router.get('/', checkAuth, obtenerPacientes)
 
 
 export default router;

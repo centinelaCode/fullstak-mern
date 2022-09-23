@@ -15,17 +15,20 @@ const agregarPacientes = async(req, res) => {
     res.json(pacienteAlmacenado);
     
   } catch (error) {
-    console.log(error);
+    error = new Error('Error no se puedo guardar el paciente');
+    return res.status(400).json({msg: error.message});
   }
-
-  // console.log(paciente);
 }
 
 
 /*
 * Method para obtenerr un pacientes
 */
-const obtenerPacientes = (req, res) => {}
+const obtenerPacientes = async(req, res) => {
+  const pacientes = await Paciente.find().where('veterinario').equals(req.veterinario)
+
+  res.json(pacientes);
+}
 
 
 export {
