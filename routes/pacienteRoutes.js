@@ -5,8 +5,9 @@ import {
   agregarPacientes,
   obtenerPacientes,
 } from '../controllers/paciente.controller.js'
+import checkAuth from '../middleware/authMiddleware.js';
 
-router.post('/', agregarPacientes)
+router.post('/', checkAuth, agregarPacientes)
 router.get('/', obtenerPacientes)
 
 
