@@ -38,7 +38,7 @@ const veterinarioShema =  mongoose.Schema(
     },
   },
   {
-    timesStamps: true,
+    timestamps: true,
     versionKey: false,
   }
 );
