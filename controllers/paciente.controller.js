@@ -97,7 +97,34 @@ const actualizarPaciente = async(req, res) => {
 }
 
 
-const eliminarPaciente = async(req, res) => {}
+/*
+* Method para eliminar un pacientye
+*/
+const eliminarPaciente = async(req, res) => {
+  const { id } = req.params;
+
+  const paciente = await Paciente.findById(id);
+
+  // valida que el el id del paciente sea valido
+  if(!paciente) {
+    const error = new Error('Hubo un Error, no se puedo identificar el paciente');
+    return res.status(404).json({msg: error.message});
+  }
+  
+  // verificamos que el paciente sea del veterinario que tiene sesión
+  if(paciente.veterinario._id.toString() !== req.veterinario._id.toString()) {
+    return res.json({msg: 'Accion no valida'});
+  }
+
+  try {
+    // eliminamos el paciente
+    await Paciente.findByIdAndDelete(id);
+    return res.json({msg: 'Paciente eliminado'})
+
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 
 export {
