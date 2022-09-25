@@ -36,9 +36,16 @@ const obtenerPacientes = async(req, res) => {
 */
 const obtenerPaciente = async(req, res) => {
   const { id } = req.params;
-  
+
   const paciente = await Paciente.findById(id);
+
+  // valida que el el id del paciente sea valido
+  if(!paciente) {
+    const error = new Error('Hubo un Error, no se puedo identificar el paciente');
+    return res.status(400).json({msg: error.message});
+  }
   
+  // for debug and test
   // console.log(paciente.veterinario._id);
   // console.log(req.veterinario._id);
   
