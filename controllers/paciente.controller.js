@@ -61,10 +61,42 @@ const obtenerPaciente = async(req, res) => {
 }
 
 
+/*
+* Method para actualizar un pacientye
+*/
+const actualizarPaciente = async(req, res) => {
+  const { id } = req.params;
+
+  const paciente = await Paciente.findById(id);
+
+  // valida que el el id del paciente sea valido
+  if(!paciente) {
+    const error = new Error('Hubo un Error, no se puedo identificar el paciente');
+    return res.status(404).json({msg: error.message});
+  }
+  
+  // verificamos que el paciente sea del veterinario que tiene sesión
+  if(paciente.veterinario._id.toString() !== req.veterinario._id.toString()) {
+    return res.json({msg: 'Accion no valida'});
+  }
+
+  // Actualizamos los valores 
+  paciente.nombre = req.body.nombre || paciente.nombre;
+  paciente.propietario = req.body.propietario || paciente.propietario;
+  paciente.email = req.body.email || paciente.email;
+  paciente.fecha = req.body.fecha || paciente.fecha;
+  paciente.sintomas = req.body.sintomas || paciente.sintomas;
+
+  try {
+    // const pacienteActualizado = await Paciente.findByIdAndUpdate(id, update, options)
+    const pacienteActualizado = await paciente.save();
+    return res.json(pacienteActualizado)
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 
-
-const actualizarPaciente = async(req, res) => {}
 const eliminarPaciente = async(req, res) => {}
 
 
