@@ -10,9 +10,10 @@ const emailOlvidePassword = async(data) => {
     }
   });
 
+  // obtenemos los datos de la data
   const {nombre, email, token} = data;
   
-  // TODO: Enviar el email
+  // ! Enviar el email
   const info = await transporter.sendMail({
     from: 'APV - Administrador de PAcientes de Veterinaria',
     to: email,
@@ -28,7 +29,6 @@ const emailOlvidePassword = async(data) => {
   });
 
   console.log('Mensaje enviado: %s', info.messageId);
-
 }
 
 
