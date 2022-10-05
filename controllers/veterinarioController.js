@@ -197,6 +197,49 @@ const perfil = (req, res) => {
 }
 
 
+
+/*
+* Method para el perfil
+*/
+const actualizarPerfil = async(req, res) => {
+  const { id } = req.params
+  
+  const veterinario = await Veterinario.findById(id);
+  if(!veterinario) {
+    const error = new Error('Error inesperado')
+    return res.status(400).json({msg: error.message})
+  }
+
+  try {
+
+    const {email} = req.body;
+    // verificamos quer el email no este registrado en la DB
+    if(veterinario.email !== req.body.email){
+      // significa que cambio el email
+      const existeEmail = await Veterinario.findOne({email})
+
+      if(existeEmail) {
+        const error = new Error('El Email ya esta registrado!!')
+        return res.status(400).json({msg: error.message})
+      }
+    }
+    
+    // sobre escibimos las propiedades
+    veterinario.nombre = req.body.nombre;
+    veterinario.email = req.body.email;
+    veterinario.web = req.body.web;
+    veterinario.telefono = req.body.telefono;
+
+    const veterinarioActualizado = await veterinario.save();
+    res.json(veterinarioActualizado);
+
+  } catch (error) {
+    console.log(error)
+  }
+  
+}
+
+
 export {
   registro,
   confirmar,
@@ -205,4 +248,5 @@ export {
   comprobarToken,
   nuevoPassword,
   perfil,
+  actualizarPerfil,
 }
