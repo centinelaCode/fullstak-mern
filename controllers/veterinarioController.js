@@ -197,6 +197,86 @@ const perfil = (req, res) => {
 }
 
 
+
+/*
+* Method para editar el perfil
+*/
+const actualizarPerfil = async(req, res) => {
+  const { id } = req.params
+  
+  const veterinario = await Veterinario.findById(id);
+  if(!veterinario) {
+    const error = new Error('Error inesperado')
+    return res.status(400).json({msg: error.message})
+  }
+
+  try {
+
+    const {email} = req.body;
+    // verificamos quer el email no este registrado en la DB
+    if(veterinario.email !== req.body.email){
+      // significa que cambio el email
+      const existeEmail = await Veterinario.findOne({email})
+
+      if(existeEmail) {
+        const error = new Error('El Email ya esta registrado!!')
+        return res.status(400).json({msg: error.message})
+      }
+    }
+    
+    // sobre escibimos las propiedades
+    veterinario.nombre = req.body.nombre;
+    veterinario.email = req.body.email;
+    veterinario.web = req.body.web;
+    veterinario.telefono = req.body.telefono;
+
+    const veterinarioActualizado = await veterinario.save();
+    res.json(veterinarioActualizado);
+
+  } catch (error) {
+    console.log(error)
+  }  
+}
+
+
+/*
+* Method para actualizar el password
+*/
+const actualizarPassword = async(req, res) => {
+  // console.log(req.veterinario)
+  // console.log(req.body)
+
+  // leer los datos
+  const { id } = req.veterinario
+  const { pwd_actual, pwd_nuevo } = req.body;
+
+  // comprobar que el veterinario exista
+  const veterinario = await Veterinario.findById(id);
+  if(!veterinario) {
+    const error = new Error('No se pudo cambiar el password, error inesperado')
+    return res.status(400).json({msg: error.message})
+  }
+    
+  // comprobar que el password actual sea valido
+  // usamos el metodo del modelo comprobarPassword
+  if(await veterinario.compararPassword(pwd_actual)){
+    // guardar el nuevo password
+
+    veterinario.password = pwd_nuevo;
+    await veterinario.save();
+
+    res.json({msg: 'Password Actualizado Correctamente'})
+
+  } else {
+    const error = new Error('El Password Actual es Incorrecto')
+    return res.status(400).json({msg: error.message})
+  }
+
+  
+
+}
+
+
 export {
   registro,
   confirmar,
@@ -205,4 +285,6 @@ export {
   comprobarToken,
   nuevoPassword,
   perfil,
+  actualizarPerfil,
+  actualizarPassword,
 }
